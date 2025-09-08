@@ -1,0 +1,62 @@
+graph TD
+    %% Define Styles for consistency and beauty
+    classDef inputStyle fill:#e6e6fa,stroke:#333,stroke-width:2px
+    classDef representationStyle fill:#f0f8ff,stroke:#333,stroke-width:2px
+    classDef atomicStreamStyle fill:#d4ebf2,stroke:#0077b6,stroke-width:2px
+    classDef motifStreamStyle fill:#d4f2e3,stroke:#00775e,stroke-width:2px
+    classDef decisionStyle fill:#fff5e6,stroke:#d68900,stroke-width:2px
+    classDef outputStyle fill:#ffe6e6,stroke:#c82333,stroke-width:2px
+    classDef interactionLink stroke:red,stroke-width:2px,stroke-dasharray: 5 5
+
+    subgraph " "
+        direction TB
+        subgraph "1. Input Layer"
+            Input_Smiles[("Drug Pair (SMILES)")]:::inputStyle
+        end
+
+        subgraph "2. Data Representation"
+            Input_Smiles --> Atomic_Graph(Atomic Graph):::representationStyle
+            Input_Smiles --> Motif_Graph(Motif Graph):::representationStyle
+        end
+        
+        subgraph "3. Symmetric Interaction Encoder (N Layers)"
+            subgraph Atomic_Stream [Atomic Stream]
+                direction LR
+                A_Emb[Embedding] --> A_Enc1[Prism<br>Encoder 1] --> A_Enc_Dots[...] --> A_EncN[Prism<br>Encoder N] --> A_Out((Atomic<br>Repr.))
+            end
+            
+            subgraph Motif_Stream [Motif Stream]
+                direction LR
+                M_Emb[Embedding] --> M_Enc1[Prism<br>Encoder 1] --> M_Enc_Dots[...] --> M_EncN[Prism<br>Encoder N] --> M_Out((Motif<br>Repr.))
+            end
+
+            %% Define stream styles
+            class A_Emb,A_Enc1,A_Enc_Dots,A_EncN,A_Out atomicStreamStyle;
+            class M_Emb,M_Enc1,M_Enc_Dots,M_EncN,M_Out motifStreamStyle;
+            
+            %% Deep Layer-wise Interaction Arrows
+            A_Enc1 <-.-> M_Enc1
+            A_EncN <-.-> M_EncN
+        end
+
+        subgraph "4. Spotlight Decision Module"
+            %% The label is simplified and parentheses are removed to avoid parsing error
+            Spotlight["Spotlight Module<br>Global Query & Attention Focus"]:::decisionStyle
+        end
+
+        subgraph "5. Output Layer"
+             Output(["Multi-Class<br>Probabilities<br>(Softmax)"]):::outputStyle
+        end
+    end
+    
+    %% Connect the main blocks
+    Atomic_Graph --> A_Emb
+    Motif_Graph --> M_Emb
+    A_Out --> Spotlight
+    M_Out --> Spotlight
+    Spotlight --> MLP[Final MLP Classifier]:::decisionStyle
+    MLP --> Output
+
+    %% Apply the interaction link style
+    linkStyle 10 interactionLink
+    linkStyle 11 interactionLink
