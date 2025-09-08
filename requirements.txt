@@ -1,0 +1,31 @@
+# ===================================================================
+# PRISM-DDI Project Requirements (Pip Dependencies)
+#
+# ----- CRITICAL INSTALLATION INSTRUCTIONS -----
+# This project requires a specific installation order in a Conda environment.
+# Please execute the following commands IN ORDER in your terminal.
+#
+# 1. Create and activate a new Conda environment:
+#    conda create -n prism_ddi python=3.8
+#    conda activate prism_ddi
+#
+# 2. Install complex binary packages (RDKit, TensorFlow-GPU) via Conda:
+#    conda install -c conda-forge rdkit
+#    conda install -c anaconda tensorflow-gpu  # Or just 'conda install tensorflow-gpu'
+#
+# 3. Install the rest of the packages using this file:
+#    pip install -r requirements.txt
+# ===================================================================
+# --- Data Handling and Numerical Operations ---
+pandas==1.5.2
+numpy==1.19.5
+scikit-learn==1.2.0
+# --- Graph Processing (Optional, for reference) ---
+# networkx==2.8.8
+# --- Utilities and Visualization ---
+tqdm
+matplotlib==3.6.2
+seaborn
+jupyterlab
+ipython==8.7.0
+ipywidgets # For interactive tqdm progress bars in Jupyter
