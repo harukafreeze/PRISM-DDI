@@ -65,8 +65,6 @@ Follow these steps to reproduce our SOTA results.
 
 #### 1. Data Preprocessing
 
-*(Note: Provide instructions on how to obtain and preprocess the data. If the preprocessed file is provided, simplify this step.)*
-
 First, download the raw dataset (e.g., ZhongDDI) and place the CSV files in the `data/raw/` directory. Then, run the preprocessing notebook to generate the feature file:
 ```
 ```bash
