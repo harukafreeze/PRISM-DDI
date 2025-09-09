@@ -61,6 +61,7 @@ This project is developed using Python 3.8 and TensorFlow 2.10+.
 ## Reproducing Results
 
 Follow these steps to reproduce our SOTA results.
+```bash
 
 #### 1. Data Preprocessing
 
