@@ -14,7 +14,6 @@ from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import minimum_spanning_tree
 # +---------------------------------------------------------+
 # |          PART 1: ATOM FEATURE EXTRACTION                |
-# |          (Source: AMIE's features.py)                   |
 # +---------------------------------------------------------+
 def one_of_k_encoding_unk(x, allowable_set):
     """Maps inputs not in the allowable set to the last element."""
@@ -52,8 +51,7 @@ def atom_features(atom, explicit_H=False, use_chirality=True):
             results = results + [False, False] + [atom.HasProp('_ChiralityPossible')]
     return np.array(results, dtype=np.float32)
 # +---------------------------------------------------------+
-# |      PART 2: MOLECULE TO MOTIF DECOMPOSITION            |
-# |      (Source: AMIE's utils.py -> Mol_Tokenizer)         |
+# |      PART 2: MOLECULE TO MOTIF DECOMPOSITION            |       
 # +---------------------------------------------------------+
 class MotifTokenizer:
     """
@@ -198,8 +196,7 @@ class MotifTokenizer:
         mst_edges = [(r, c) for r, c in zip(row, col)]
         return cliques, mst_edges
 # +---------------------------------------------------------+
-# |   PART 3: FULL DRUG REPRESENTATION GENERATOR            |
-# |   (Source: AMIE's dataset_processed.py -> molgraph_rep)   |
+# |   PART 3: FULL DRUG REPRESENTATION GENERATOR            |   
 # +---------------------------------------------------------+
 def generate_drug_representation(smiles, motif_cliques_atoms):
     """
@@ -229,4 +226,5 @@ def generate_drug_representation(smiles, motif_cliques_atoms):
         'atomic_adj': adj_matrix.astype(np.float32),
         'atom_motif_matrix': atom_motif_matrix,
         'sum_atoms_per_motif': sum_atoms_per_motif.astype(np.float32)
+
     }
