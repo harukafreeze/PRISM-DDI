@@ -1,3 +1,5 @@
+![PRISM-DDI LOGO](LOGO.png)
+
 ---
 
 # PRISM-DDI: Parallel Reasoning and Interaction Spotlight Model for DDI Prediction
