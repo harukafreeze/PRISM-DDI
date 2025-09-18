@@ -2,7 +2,7 @@
 
 ```markdown
 # PRISM-DDI: Parallel Reasoning and Interaction Spotlight Model for DDI Prediction
-
+```
 
 PRISM-DDI is a novel, State-of-the-Art framework for multi-class Drug-Drug Interaction (DDI) prediction. The name "PRISM" serves as both an acronym and a powerful metaphor: like a prism decomposing light into its constituent spectra, our model decomposes the complex phenomenon of DDI into distinct, complementary information streams—**atomic topology** and **functional motifs**—and ultimately focuses on the core interaction signals with a unique **Spotlight** mechanism.
 
