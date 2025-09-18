@@ -3,11 +3,8 @@
 ```markdown
 # PRISM-DDI: Parallel Reasoning and Interaction Spotlight Model for DDI Prediction
 
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![TensorFlow 2.x](https://img.shields.io/badge/TensorFlow-2.x-orange.svg)](https://www.tensorflow.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**PRISM-DDI** is a novel, State-of-the-Art framework for multi-class Drug-Drug Interaction (DDI) prediction. The name "PRISM" serves as both an acronym and a powerful metaphor: like a prism decomposing light into its constituent spectra, our model decomposes the complex phenomenon of DDI into distinct, complementary information streams—**atomic topology** and **functional motifs**—and ultimately focuses on the core interaction signals with a unique **Spotlight** mechanism.
+PRISM-DDI is a novel, State-of-the-Art framework for multi-class Drug-Drug Interaction (DDI) prediction. The name "PRISM" serves as both an acronym and a powerful metaphor: like a prism decomposing light into its constituent spectra, our model decomposes the complex phenomenon of DDI into distinct, complementary information streams—**atomic topology** and **functional motifs**—and ultimately focuses on the core interaction signals with a unique **Spotlight** mechanism.
 
 Our model achieves **95.59% accuracy** on the ZhongDDI benchmark, surpassing the previous SOTA model.
 
