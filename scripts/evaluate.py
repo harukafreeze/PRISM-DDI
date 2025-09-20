@@ -1,4 +1,4 @@
-# scripts/evaluate.py (或者一个新的评估脚本 a_detailed_evaluation.py)
+# scripts/evaluate.py 
 import os
 import sys
 import tensorflow as tf
@@ -13,7 +13,7 @@ import configs.default_config as config
 from prism.dataloader import PrismDdiDataloader
 from prism.model import PRISM_DDI
 # --- 2. 参数设置 ---
-# !!! 关键：将这里替换成您训练结束后保存的最佳模型文件名 !!!
+# !!! 关键：将这里替换成训练结束后保存的最佳模型文件名 !!!
 BEST_MODEL_FILENAME = "PRISM_DDI_scheduler_run_20250905-025330_best.h5" 
 MODEL_PATH = os.path.join(config.MODEL_SAVE_PATH, BEST_MODEL_FILENAME)
 # --- 3. 加载模型 ---
@@ -24,8 +24,8 @@ print(f"Model loaded successfully from {MODEL_PATH}")
 # --- 4. 加载测试数据 ---
 print("\n--- Loading Test Dataset ---")
 dataloader = PrismDdiDataloader(config)
-# 重要：设置batch_size为一个合理的值，可以更大一些以加速预测
-# 这里我们将整个测试集加载到一个大的batch中，如果内存不足可以分批
+# 设置batch_size为一个合理的值，可以更大一些以加速预测
+# 这里将整个测试集加载到一个大的batch中，如果内存不足可以分批
 test_dataset = dataloader.get_dataset(mode='test')
 # --- 5. 进行预测 ---
 print("\n--- Predicting on Test Set ---")
@@ -62,7 +62,7 @@ aupr_weighted = average_precision_score(y_true_one_hot, y_pred_probs, average='w
 f1_macro = f1_score(y_true, y_pred_labels, average='macro')
 precision_macro = precision_score(y_true, y_pred_labels, average='macro')
 recall_macro = recall_score(y_true, y_pred_labels, average='macro')
-# --- 7. 打印最终结果 ---
+
 print("\n--- Final Test Set Performance Report ---")
 print(f"  - Accuracy:           {acc * 100:.2f}%")
 print("---------------------------------------------")
