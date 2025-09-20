@@ -92,7 +92,7 @@ def main(ablation_name=None):
         print(f"  - Test {metric}: {value:.4f}")
     print("\n--- Script Finished ---")
 # ===================================================================
-# This block allows the script to be run directly as before.
+# This block allows the script to be run directly.
 # ===================================================================
 if __name__ == '__main__':
     main()
