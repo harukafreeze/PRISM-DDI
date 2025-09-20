@@ -86,7 +86,7 @@ class SpotlightDecisionModule(Layer):
         v_motif_a = h_motif_a[:, 0, :]
         v_motif_b = h_motif_b[:, 0, :]
         
-        # --- [IMPROVEMENT-2] Create a powerful global context for the query ---
+        # --- Create a powerful global context for the query ---
         # Concatenate all four summary vectors to form a comprehensive interaction signature
         global_context = Concatenate()([v_atomic_a, v_atomic_b, v_motif_a, v_motif_b])
         # Shape: (batch, 4 * d_model)
@@ -132,7 +132,7 @@ def PRISM_DDI(config):
     input_motif_ids_b = Input(shape=(None,), dtype=tf.int32, name="motif_ids_b")
     input_motif_adj_b = Input(shape=(None, None), name="motif_adj_b")
     
-    # --- [IMPROVEMENT-1] Initial Embeddings and Normalization ---
+    # --- Initial Embeddings and Normalization ---
     # Atomic Stream
     atomic_embedding_layer = Dense(config.D_MODEL, activation='relu', name="atomic_feature_embedding")
     norm_atomic = LayerNormalization(name="norm_atomic_input")
