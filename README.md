@@ -108,13 +108,16 @@ Available ablation types are: `motif_only`, `atomic_only`, `no_cross_attention`,
 If you find our work useful, please consider citing:
 
 ```
-@article{,
+
+@misc{PRISM-DDI: Parallel Reasoning and Interaction Spotlight Model for DDI Prediction,
   title={PRISM-DDI: Parallel Reasoning and Interaction Spotlight Model for DDI Prediction},
-  author={},
-  journal={},
-  year={},
-  pages={}
+  author={Shuoxiang Wang},
+  year={2025},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/harukafreeze/PRISM-DDI}},
 }
+
 ```
 
 ## License
