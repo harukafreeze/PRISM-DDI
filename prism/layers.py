@@ -62,7 +62,7 @@ class PrismGATLayer(Layer):
             # Add a large negative number to positions where there is NO edge (adj=0)
             adj_mask = (1.0 - tf.cast(adj, tf.float32)) * -1e9
             scaled_attention_logits += tf.expand_dims(adj_mask, axis=1) # Add head dimension for broadcasting
-        # --- [BUG FIX-1: CRITICAL] CORRECT ATTENTION MASK LOGIC ---
+        # --- CORRECT ATTENTION MASK LOGIC ---
         if mask is not None:
             # The input mask is boolean (True for real tokens, False for padding).
             # 1. Cast it to float32. True -> 1.0, False -> 0.0
@@ -102,7 +102,7 @@ class PrismGATLayer(Layer):
         output_cross = self.dense_cross(concat_attention_cross)
         output_cross = self.dropout_cross(output_cross, training=training)
         
-        # --- [IMPROVEMENT-3] Dynamic Gating Fusion (Optimized) ---
+        # --- Dynamic Gating Fusion (Optimized) ---
         # The gate's decision is now based on the original state and the two proposed updates.
         gate_input = tf.concat([x_self, output_self, output_cross], axis=-1)
         gate = self.gate_dense(gate_input)
