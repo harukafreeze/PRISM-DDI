@@ -37,7 +37,7 @@ This mechanism successfully decouples predictive reasoning from specific chemica
 
 **1. Clone the repository**
 ```bash
-git clone https://github.com/YourUsername/Gemini-DDI.git
+git clone https://github.com/harukafreeze/Gemini-DDI.git
 cd Gemini-DDI
 ```
 
