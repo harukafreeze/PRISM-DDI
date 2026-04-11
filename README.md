@@ -1,126 +1,142 @@
-![PRISM-DDI LOGO](LOGO.png)
+```markdown
+# Gemini-DDI ♊: A Dual-view Framework for Drug-Drug Interaction Prediction
+
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/release/python-380/)
+[![TensorFlow 2.x](https://img.shields.io/badge/TensorFlow-2.x-orange.svg)](https://tensorflow.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Paper Status](https://img.shields.io/badge/Paper-Under_Review-red.svg)]()
+
+> This repository contains the official TensorFlow implementation of the paper: **"Gemini-DDI: A Dual-view Framework for Drug-Drug Interaction Prediction"**.
 
 ---
 
-# PRISM-DDI: Parallel Reasoning and Interaction Spotlight Model for DDI Prediction
+## 💡 Overview
 
+Graph Neural Networks (GNNs) have significantly advanced drug-drug interaction (DDI) prediction. However, their reliance on extracting training-specific structural motifs often leads to **Structural Overfitting**, which severely limits generalization to novel chemical scaffolds (i.e., the cold-start problem).
 
-PRISM-DDI is a novel, State-of-the-Art framework for multi-class Drug-Drug Interaction (DDI) prediction. The name "PRISM" serves as both an acronym and a powerful metaphor: like a prism decomposing light into its constituent spectra, our model decomposes the complex phenomenon of DDI into distinct, complementary information streams—**atomic topology** and **functional motifs**—and ultimately focuses on the core interaction signals with a unique **Spotlight** mechanism.
+**Gemini-DDI** overcomes this limitation by acting as a logical bridge between micro-structural topologies and macro-physicochemical descriptors. By utilizing a **Consistency Distillation** strategy integrated with **Stochastic Modality Occlusion ($p=0.8$)**, Gemini-DDI compels the physicochemical branch to reconstruct the predictive manifold relying strictly on invariant, continuous physicochemical laws. 
 
-Our model achieves **95.59% accuracy** on the ZhongDDI benchmark, surpassing the previous SOTA model.
+This mechanism successfully decouples predictive reasoning from specific chemical backbones, achieving state-of-the-art (SOTA) performance in strict Inductive (Unseen-Unseen) scenarios without relying on external Knowledge Graphs.
 
-This repository contains the official implementation of PRISM-DDI and the necessary scripts to reproduce our results.
+<p align="center">
+  <img src="figs/Figure1_base.png" alt="Gemini-DDI Architecture" width="90%">
+  <br>
+  <em>Figure 1: Schematic architecture of the Gemini-DDI framework.</em>
+</p>
 
-## Core Idea & Architecture
+---
 
-The PRISM-DDI model is built upon three core principles designed to address key challenges in DDI prediction:
+## 🚀 Key Features
+- **Dual-View Representation**: Integrates a Bond-Aware Graph Isomorphism Network (Micro-View) with an SE-calibrated Physicochemical Encoder (Macro-View).
+- **Consistency Distillation**: Employs an offline distillation pipeline with temperature-scaled KL-divergence.
+- **Robust Out-of-Distribution (OOD) Generalization**: Sets a new benchmark on the highly imbalanced, fine-grained **DrugBank-65** dataset for zero-shot scaffold hopping.
+- **Hardware Optimized**: Fully supports TensorFlow Mixed Precision (`mixed_float16`) and dynamic memory growth, optimized for NVIDIA A800 GPUs.
 
-1.  **Symmetric Dual-Stream Architecture:** We model the inherent duality of chemical information through two parallel Transformer-based streams:
-    *   **Atomic Stream:** Captures the fine-grained topological information from the atom-bond graph.
-    *   **Motif Stream:** Captures the high-level functional semantics from the chemical motif graph.
+---
 
-2.  **Deep Layer-wise Interaction:** Unlike traditional models that fuse information late, PRISM-DDI enforces deep interaction at **every layer** of its encoders. A custom `PrismGATLayer` performs both intra-drug self-attention and inter-drug cross-attention, allowing the representations of the two drugs to co-evolve and mutually refine each other throughout the learning process.
+## 🛠️ Installation & Setup
 
-3.  **Spotlight Decision Module:** For final prediction, the model forms a global context query representing the DDI task and uses it as a "spotlight" to attend to all functional motifs. This allows the model to dynamically focus on the most critical substructures for a given interaction, leading to both higher accuracy and enhanced interpretability.
-
-![PRISM-DDI Architecture](results/figures/prism_architecture.png)
-*(Note: Please place your model architecture diagram at `results/figures/prism_architecture.png`)*
-
-## Performance
-
-PRISM-DDI sets a new state-of-the-art on the ZhongDDI multi-class benchmark dataset.
-
-| Model       | Accuracy (%)      | AUROC (%)         | AUPR (%)          |
-|-------------|-------------------|-------------------|-------------------|
-| **PRISM-DDI (Ours)** | **95.59**         | **99.49**         | **98.73**         |
-
-## Setup and Installation
-
-This project is developed using Python 3.8 and TensorFlow 2.10+.
-
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/harukafreeze/PRISM-DDI.git
-    cd PRISM-DDI
-    ```
-
-2.  **Create a Conda environment (recommended):**
-    ```bash
-    conda create -n prism python=3.8
-    conda activate prism
-    ```
-
-3.  **Install dependencies:**
-    The necessary CUDA/cuDNN toolkit and TensorFlow will be installed via pip. Ensure your NVIDIA driver is compatible.
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-## Reproducing Results
-
-Follow these steps to reproduce our SOTA results.
+**1. Clone the repository**
 ```bash
-
-#### 1. Data Preprocessing
-
-First, download the raw dataset (e.g., ZhongDDI) and place the CSV files in the `data/raw/` directory. Then, run the preprocessing notebook to generate the feature file:
+git clone https://github.com/YourUsername/Gemini-DDI.git
+cd Gemini-DDI
 ```
+
+**2. Create a Conda environment**
 ```bash
-# Run the cells in notebooks/2_preprocess_dataset.ipynb
+conda create -n gemini_ddi python=3.8
+conda activate gemini_ddi
 ```
-This will create the `precomputed_drug_features.npy` file in `data/processed/`.
 
-#### 2. Training
-
-To start the training process with the default optimal hyperparameters, run the main training script:
-
+**3. Install dependencies**
 ```bash
-python scripts/train.py
+pip install -r requirements.txt
+# Core dependencies: tensorflow>=2.8, rdkit-pypi, pandas, scikit-learn, tqdm
 ```
-The script will automatically use learning rate scheduling, early stopping, and save the best model weights to the `results/trained_models/` directory.
 
-#### 3. Evaluation
+---
 
-Once training is complete, an evaluation on the test set will be performed automatically. To re-evaluate a saved model, use the evaluation script:
+## 📂 Project Structure
+
+```text
+Gemini-DDI/
+├── configs/                  # Configuration files for Transductive/Inductive tasks
+├── data/                     # Raw datasets and processed TFRecords
+│   ├── raw/                  # Original CSV files (e.g., ZhongDDI, DrugBank)
+│   └── db65_exp/             # Physically isolated directory for DB-65
+├── prism/                    # Core Model Architecture
+│   ├── dataloader.py         # Type-safe, dynamic TFRecord parser
+│   ├── layers.py             # Bond-Aware GIN, Transformer, SE-Block
+│   └── model.py              # Dual-view Gemini-DDI Network
+├── scripts/                  # Execution pipelines
+│   ├── run_deepddi_5fold_pipeline.py    # Warm-start (S0) 5-fold CV
+│   └── run_db65_s2_distillation.py      # Cold-start (S2) Consistency Distillation
+└── README.md
+```
+
+---
+
+## 🏃‍♂️ Reproducing the Experiments
+
+### Phase 1: Transductive Evaluation (Warm-start S0)
+To train the base model on the DrugBank-65 dataset and evaluate its fundamental representational capacity:
 
 ```bash
-# Ensure the model path in the script is correct
-python scripts/final_evaluate.py
+# 1. Filter the dataset to 65 core mechanisms
+python scripts/filter_deepddi_65.py
+
+# 2. Extract dual-view features (RDKit descriptors & Motif graphs)
+python scripts/preprocess_deepddi_features.py
+
+# 3. Execute the 5-fold cross-validation pipeline
+python scripts/run_deepddi_5fold_pipeline.py
 ```
-This will print the full performance report, including Accuracy, AUROC, and AUPR.
+*Note: The best-performing weights from this phase will be automatically archived as `DB65_Warm_Fold_X.h5` and used as the "Teacher" in Phase 2.*
 
-## Running Ablation Studies
-
-We provide a dedicated script to easily reproduce the ablation studies presented in our paper.
+### Phase 2: Inductive Evaluation (Cold-start S2) via Distillation
+To evaluate the true zero-shot generalization on novel scaffolds using Modality Occlusion:
 
 ```bash
-# Example: Run the "Motif-Only" ablation experiment
-python scripts/ablation_runner.py --ablation_type motif_only
+# 1. Generate strictly isolated drug-wise split datasets (S1 & S2)
+python scripts/prepare_db65_inductive.py
 
-# Example: Run the "No Cross-Attention" experiment
-python scripts/ablation_runner.py --ablation_type no_cross_attention
+# 2. Execute consistency distillation and S2 Radar evaluation
+python scripts/run_db65_s2_distillation.py
 ```
 
-Available ablation types are: `motif_only`, `atomic_only`, `no_cross_attention`, and `no_spotlight`.
+---
 
-## Citation
+## 📊 Main Results
 
-If you find our work useful, please consider citing:
+Gemini-DDI achieves SOTA performance across multiple benchmarks. Below are the finalized results on the **DrugBank-65** dataset (evaluated across 5-fold CV):
 
-```
+| Scenario | Method | Top-1 Accuracy | Top-3 Accuracy | Micro-AUC | Macro-F1 |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| **Warm-start (S0)** | DSN-DDI (2023) | 96.94% | - | 0.9947 | 0.9693 |
+| | **Gemini-DDI (Ours)** | **98.13%** | **99.85%** | **0.9980** | **0.9839** |
+| **Cold-start (S2)** | SSI-DDI (2021) | 54.12% | - | 0.8423 | - |
+| | **Gemini-DDI (Ours)** | **55.01%** | **78.30%** | **0.8920** | **0.4634** |
 
-@misc{PRISM-DDI: Parallel Reasoning and Interaction Spotlight Model for DDI Prediction,
-  title={PRISM-DDI: Parallel Reasoning and Interaction Spotlight Model for DDI Prediction},
-  author={Shuoxiang Wang},
-  year={2025},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  howpublished = {\url{https://github.com/harukafreeze/PRISM-DDI}},
+*(Detailed ablation studies and latent space clustering metrics (NMI & Purity) can be found in our manuscript.)*
+
+---
+
+## 📝 Citation
+
+If you find our work or this code useful for your research, please consider citing our paper:
+
+```bibtex
+@article{wang2026geminiddi,
+  title={Gemini-DDI: A Dual-view Framework for Drug-Drug Interaction Prediction},
+  author={Wang, Shuoxiang and Zhou, Changjian},
+  journal={Briefings in Bioinformatics (Under Review)},
+  year={2026}
 }
-
 ```
 
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for details.
+## 📧 Contact
+For any questions or issues regarding the code, please open an issue in this repository or contact the corresponding author at: `zhouchangjian@neau.edu.cn`.
 ```
+
+---
+
