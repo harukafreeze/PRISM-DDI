@@ -128,7 +128,7 @@ If you find our work or this code useful for your research, please consider citi
 @article{wang2026geminiddi,
   title={Gemini-DDI: A Dual-view Framework for Drug-Drug Interaction Prediction},
   author={Wang, Shuoxiang and Zhou, Changjian},
-  journal={Briefings in Bioinformatics (Under Review)},
+  journal={Pattern Recognition (Under Review)},
   year={2026}
 }
 ```
