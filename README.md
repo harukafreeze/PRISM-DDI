@@ -53,28 +53,6 @@ pip install -r requirements.txt
 # Core dependencies: tensorflow>=2.8, rdkit-pypi, pandas, scikit-learn, tqdm
 ```
 
----
-
-## 📂 Project Structure
-
-```text
-Gemini-DDI/
-├── configs/                  # Configuration files for Transductive/Inductive tasks
-├── data/                     # Raw datasets and processed TFRecords
-│   ├── raw/                  # Original CSV files (e.g., ZhongDDI, DrugBank)
-│   └── db65_exp/             # Physically isolated directory for DB-65
-├── prism/                    # Core Model Architecture
-│   ├── dataloader.py         # Type-safe, dynamic TFRecord parser
-│   ├── layers.py             # Bond-Aware GIN, Transformer, SE-Block
-│   └── model.py              # Dual-view Gemini-DDI Network
-├── scripts/                  # Execution pipelines
-│   ├── run_deepddi_5fold_pipeline.py    # Warm-start (S0) 5-fold CV
-│   └── run_db65_s2_distillation.py      # Cold-start (S2) Consistency Distillation
-└── README.md
-```
-
----
-
 ## 🏃‍♂️ Reproducing the Experiments
 
 ### Phase 1: Transductive Evaluation (Warm-start S0)
@@ -102,23 +80,6 @@ python scripts/prepare_db65_inductive.py
 # 2. Execute consistency distillation and S2 Radar evaluation
 python scripts/run_db65_s2_distillation.py
 ```
-
----
-
-## 📊 Main Results
-
-Gemini-DDI achieves SOTA performance across multiple benchmarks. Below are the finalized results on the **DrugBank-65** dataset (evaluated across 5-fold CV):
-
-| Scenario | Method | Top-1 Accuracy | Top-3 Accuracy | Micro-AUC | Macro-F1 |
-| :--- | :--- | :---: | :---: | :---: | :---: |
-| **Warm-start (S0)** | DSN-DDI (2023) | 96.94% | - | 0.9947 | 0.9693 |
-| | **Gemini-DDI (Ours)** | **98.13%** | **99.85%** | **0.9980** | **0.9839** |
-| **Cold-start (S2)** | SSI-DDI (2021) | 54.12% | - | 0.8423 | - |
-| | **Gemini-DDI (Ours)** | **55.01%** | **78.30%** | **0.8920** | **0.4634** |
-
-*(Detailed ablation studies and latent space clustering metrics (NMI & Purity) can be found in our manuscript.)*
-
----
 
 ## 📝 Citation
 
