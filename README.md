@@ -12,15 +12,7 @@
 
 ---
 
-## 💡 Highlights
-- **Theoretical Grounding**: Formulated via the **Information Bottleneck (IB)** principle to minimize spurious topological correlations while maximizing causal physicochemical information.
-- **Dual-View Learning**: Synergizes discrete **Bond-Aware GINs** (Micro-View) with **SE-calibrated Continuous Descriptors** (Macro-View).
-- **Invariance Distillation**: Compels the framework to internalize predictive logic within an invariant physicochemical manifold through **Stochastic Modality Occlusion ($p=0.8$)**.
-- **OOD Robustness**: Achieves superior generalization on the fine-grained **DrugBank-65** benchmark, effectively mitigating structural overfitting in zero-shot scaffold hopping.
-
----
-
-## 🏗️ Project Structure
+## Project Structure
 
 We maintain a strictly modularized directory structure for easy reproduction and scalability:
 
@@ -56,11 +48,11 @@ pip install -r requirements.txt
 # Requirements: tensorflow==2.13.0, rdkit-pypi, scikit-learn, pandas, matplotlib
 ```
 
-## 🏃‍♂️ Reproduction Guide
+## Reproduction Guide
 
 Follow these stages to reproduce the results for both **ZhongDDI** (Macro-level) and **DrugBank-65** (Mechanism-specific) benchmarks.
 
-### 📦 Stage 1: Data Preparation & Preprocessing
+### Stage 1: Data Preparation & Preprocessing
 Regardless of the task, you must first initialize the dual-view features:
 
 ```bash
@@ -71,8 +63,7 @@ python scripts/01_data_preprocessing/extract_features.py
 python scripts/01_data_preprocessing/filter_db_65.py
 ```
 
-### 🧬 Stage 2: Macro-Level ADME Task (ZhongDDI)
-To reproduce the **98.18% S0** and **55.45% S2** results reported in the paper:
+### Stage 2: Macro-Level ADME Task (ZhongDDI)
 
 ```bash
 # 1. Execute the 5-fold cross-validation for Warm-start (S0)
@@ -86,8 +77,7 @@ python scripts/02_zhongddi_task/run_ablations_zhong.py --mode no_distill
 python scripts/02_zhongddi_task/run_ablations_zhong.py --mode no_se
 ```
 
-### 🏆 Stage 3: Fine-Grained Mechanism Task (DrugBank-65)
-This stage reproduces our **SOTA** performance. Note that the S2 task requires a "clean" teacher trained with physical isolation.
+### Stage 3: Fine-Grained Mechanism Task (DrugBank-65)
 
 #### A. Data Pipeline (Inductive Split + 5x Augmentation)
 ```bash
@@ -113,18 +103,6 @@ python scripts/03_drugbank65_task/train_inductive_teacher.py
 python scripts/03_drugbank65_task/distill_s2_db65.py
 ```
 
-### 📊 Stage 4: Evaluation & Visualization
-Generate the quantitative metrics and figures for the manuscript:
-
-```bash
-# Calculate NMI and Purity reported in Table 5
-python scripts/04_evaluation_and_plots/calc_purity_nmi.py
-
-# Generate t-SNE, Confusion Matrices, and Interpretability Plots (Figures 8-15)
-python scripts/04_evaluation_and_plots/plot_figures.py
-```
-
-
 ---
 
 ## 📊 Quantitative Visualization
@@ -146,11 +124,6 @@ Our framework provides built-in scripts to generate high-quality figures and lat
 }
 ```
 
-## 📧 Contact
-For technical inquiries, please open an issue or contact the corresponding authors:  
-**Wensheng Xiang**: `xiangwensheng@neau.edu.cn`  
-**Changjian Zhou**: `zhouchangjian@neau.edu.cn`
-```
 
 ---
 
