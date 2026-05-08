@@ -56,35 +56,74 @@ pip install -r requirements.txt
 # Requirements: tensorflow==2.13.0, rdkit-pypi, scikit-learn, pandas, matplotlib
 ```
 
----
-
 ## 🏃‍♂️ Reproduction Guide
 
-### 1. Data Preparation (Common)
-Generate the 210-D descriptors and motif graphs for the DrugBank chemical space:
+Follow these stages to reproduce the results for both **ZhongDDI** (Macro-level) and **DrugBank-65** (Mechanism-specific) benchmarks.
+
+### 📦 Stage 1: Data Preparation & Preprocessing
+Regardless of the task, you must first initialize the dual-view features:
+
 ```bash
+# 1. Extract 210-D descriptors and Motif graphs (Common for all tasks)
 python scripts/01_data_preprocessing/extract_features.py
+
+# 2. For DrugBank-65 task: Filter rare mechanisms (< 500 samples)
+python scripts/01_data_preprocessing/filter_db_65.py
 ```
 
-### 2. Fine-Grained Mechanism Prediction (DrugBank-65)
-To reproduce the **98.13% Accuracy** and **0.998 Micro-AUC**:
+### 🧬 Stage 2: Macro-Level ADME Task (ZhongDDI)
+To reproduce the **98.18% S0** and **55.45% S2** results reported in the paper:
+
 ```bash
-# Step A: Filter rare mechanisms and generate 5-fold inductive splits
-python scripts/01_data_preprocessing/filter_db_65.py
+# 1. Execute the 5-fold cross-validation for Warm-start (S0)
+python scripts/02_zhongddi_task/train_s0_zhong.py
+
+# 2. Run the logic-alignment distillation for Cold-start (S2)
+python scripts/02_zhongddi_task/distill_s2_zhong.py
+
+# 3. (Optional) Run all ablation studies
+python scripts/02_zhongddi_task/run_ablations_zhong.py --mode no_distill
+python scripts/02_zhongddi_task/run_ablations_zhong.py --mode no_se
+```
+
+### 🏆 Stage 3: Fine-Grained Mechanism Task (DrugBank-65)
+This stage reproduces our **SOTA** performance. Note that the S2 task requires a "clean" teacher trained with physical isolation.
+
+#### A. Data Pipeline (Inductive Split + 5x Augmentation)
+```bash
+# 1. Generate strictly isolated drug-wise splits (Folds 0-4)
 python scripts/01_data_preprocessing/split_inductive.py
 
-# Step B: Train Inductive Teachers (No-leakage guarantee)
-python scripts/03_drugbank65_task/train_inductive_teacher.py
+# 2. Generate 5x SMILES variants for training sets
+python scripts/01_data_preprocessing/augment_data.py
 
-# Step C: Run S2 Pro Distillation with Radar Monitoring
+# 3. Serialize all folds into TFRecords
+python scripts/01_data_preprocessing/create_tfrecords.py
+```
+
+#### B. Training & Distillation
+```bash
+# 1. Reproduce S0 Warm-start results (Table 4, 98.13% Acc)
+python scripts/03_drugbank65_task/train_s0_db65.py
+
+# 2. Reproduce S2 Cold-start results:
+# First, train Inductive Teachers (Clean models for zero-shot guide)
+python scripts/03_drugbank65_task/train_inductive_teacher.py
+# Then, run Pro-level Consistency Distillation with Radar monitoring
 python scripts/03_drugbank65_task/distill_s2_db65.py
 ```
 
-### 3. Macro-Level Prediction (ZhongDDI)
-To reproduce the cold-start benchmark of **55.45% Accuracy**:
+### 📊 Stage 4: Evaluation & Visualization
+Generate the quantitative metrics and figures for the manuscript:
+
 ```bash
-python scripts/02_zhongddi_task/run_ablations_zhong.py --mode full
+# Calculate NMI and Purity reported in Table 5
+python scripts/04_evaluation_and_plots/calc_purity_nmi.py
+
+# Generate t-SNE, Confusion Matrices, and Interpretability Plots (Figures 8-15)
+python scripts/04_evaluation_and_plots/plot_figures.py
 ```
+
 
 ---
 
