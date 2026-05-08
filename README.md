@@ -1,3 +1,4 @@
+
 # Gemini-DDI ♊: A Dual-view Framework for Drug-Drug Interaction Prediction
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/release/python-380/)
@@ -5,35 +6,41 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Paper Status](https://img.shields.io/badge/Paper-Under_Review-red.svg)]()
 
-> This repository contains the official TensorFlow implementation of the paper: **"Gemini-DDI: A Dual-view Framework for Drug-Drug Interaction Prediction"**.
+> **Official implementation for the paper:**  
+> **"Gemini-DDI: A Dual-view Framework for Drug-Drug Interaction Prediction"**  
+> (Currently under review at *Pattern Recognition*)
 
 ---
 
-## 💡 Overview
-
-Graph Neural Networks (GNNs) have significantly advanced drug-drug interaction (DDI) prediction. However, their reliance on extracting training-specific structural motifs often leads to **Structural Overfitting**, which severely limits generalization to novel chemical scaffolds (i.e., the cold-start problem).
-
-**Gemini-DDI** overcomes this limitation by acting as a logical bridge between micro-structural topologies and macro-physicochemical descriptors. By utilizing a **Consistency Distillation** strategy integrated with **Stochastic Modality Occlusion ($p=0.8$)**, Gemini-DDI compels the physicochemical branch to reconstruct the predictive manifold relying strictly on invariant, continuous physicochemical laws. 
-
-This mechanism successfully decouples predictive reasoning from specific chemical backbones, achieving state-of-the-art (SOTA) performance in strict Inductive (Unseen-Unseen) scenarios without relying on external Knowledge Graphs.
-
-<p align="center">
-  <img src="figs/Figure1_base.png" alt="Gemini-DDI Architecture" width="90%">
-  <br>
-  <em>Figure 1: Schematic architecture of the Gemini-DDI framework.</em>
-</p>
+## 💡 Highlights
+- **Theoretical Grounding**: Formulated via the **Information Bottleneck (IB)** principle to minimize spurious topological correlations while maximizing causal physicochemical information.
+- **Dual-View Learning**: Synergizes discrete **Bond-Aware GINs** (Micro-View) with **SE-calibrated Continuous Descriptors** (Macro-View).
+- **Invariance Distillation**: Compels the framework to internalize predictive logic within an invariant physicochemical manifold through **Stochastic Modality Occlusion ($p=0.8$)**.
+- **OOD Robustness**: Achieves superior generalization on the fine-grained **DrugBank-65** benchmark, effectively mitigating structural overfitting in zero-shot scaffold hopping.
 
 ---
 
-## 🚀 Key Features
-- **Dual-View Representation**: Integrates a Bond-Aware Graph Isomorphism Network (Micro-View) with an SE-calibrated Physicochemical Encoder (Macro-View).
-- **Consistency Distillation**: Employs an offline distillation pipeline with temperature-scaled KL-divergence.
-- **Robust Out-of-Distribution (OOD) Generalization**: Sets a new benchmark on the highly imbalanced, fine-grained **DrugBank-65** dataset for zero-shot scaffold hopping.
-- **Hardware Optimized**: Fully supports TensorFlow Mixed Precision (`mixed_float16`) and dynamic memory growth, optimized for NVIDIA A800 GPUs.
+## 🏗️ Project Structure
+
+We maintain a strictly modularized directory structure for easy reproduction and scalability:
+
+```text
+Gemini-DDI/
+├── configs/                  # Task-specific configurations (ZhongDDI/DB65)
+├── prism/                    # Core neural operators and data loaders
+│   ├── layers.py             # Mixed-precision optimized layers
+│   └── model.py              # Dual-view residual interaction architecture
+├── scripts/
+│   ├── 01_data_preprocessing/ # Data filtering, 5x Augmentation, and Serialization
+│   ├── 02_zhongddi_task/      # Reproduction for 4-class ADME task
+│   ├── 03_drugbank65_task/    # Reproduction for 65-class fine-grained task
+│   └── 04_evaluation_and_plots/ # Plotting and quantitative clustering (NMI/Purity)
+└── data/                     # Data placeholders (Raw/Processed)
+```
 
 ---
 
-## 🛠️ Installation & Setup
+## 🛠️ Installation
 
 **1. Clone the repository**
 ```bash
@@ -41,61 +48,69 @@ git clone https://github.com/harukafreeze/Gemini-DDI.git
 cd Gemini-DDI
 ```
 
-**2. Create a Conda environment**
+**2. Setup Environment**
 ```bash
 conda create -n gemini_ddi python=3.8
 conda activate gemini_ddi
-```
-
-**3. Install dependencies**
-```bash
 pip install -r requirements.txt
-# Core dependencies: tensorflow>=2.8, rdkit-pypi, pandas, scikit-learn, tqdm
+# Requirements: tensorflow==2.13.0, rdkit-pypi, scikit-learn, pandas, matplotlib
 ```
 
-## 🏃‍♂️ Reproducing the Experiments
+---
 
-### Phase 1: Transductive Evaluation (Warm-start S0)
-To train the base model on the DrugBank-65 dataset and evaluate its fundamental representational capacity:
+## 🏃‍♂️ Reproduction Guide
 
+### 1. Data Preparation (Common)
+Generate the 210-D descriptors and motif graphs for the DrugBank chemical space:
 ```bash
-# 1. Filter the dataset to 65 core mechanisms
-python scripts/filter_deepddi_65.py
-
-# 2. Extract dual-view features (RDKit descriptors & Motif graphs)
-python scripts/preprocess_deepddi_features.py
-
-# 3. Execute the 5-fold cross-validation pipeline
-python scripts/run_deepddi_5fold_pipeline.py
+python scripts/01_data_preprocessing/extract_features.py
 ```
-*Note: The best-performing weights from this phase will be automatically archived as `DB65_Warm_Fold_X.h5` and used as the "Teacher" in Phase 2.*
 
-### Phase 2: Inductive Evaluation (Cold-start S2) via Distillation
-To evaluate the true zero-shot generalization on novel scaffolds using Modality Occlusion:
-
+### 2. Fine-Grained Mechanism Prediction (DrugBank-65)
+To reproduce the **98.13% Accuracy** and **0.998 Micro-AUC**:
 ```bash
-# 1. Generate strictly isolated drug-wise split datasets (S1 & S2)
-python scripts/prepare_db65_inductive.py
+# Step A: Filter rare mechanisms and generate 5-fold inductive splits
+python scripts/01_data_preprocessing/filter_db_65.py
+python scripts/01_data_preprocessing/split_inductive.py
 
-# 2. Execute consistency distillation and S2 Radar evaluation
-python scripts/run_db65_s2_distillation.py
+# Step B: Train Inductive Teachers (No-leakage guarantee)
+python scripts/03_drugbank65_task/train_inductive_teacher.py
+
+# Step C: Run S2 Pro Distillation with Radar Monitoring
+python scripts/03_drugbank65_task/distill_s2_db65.py
 ```
+
+### 3. Macro-Level Prediction (ZhongDDI)
+To reproduce the cold-start benchmark of **55.45% Accuracy**:
+```bash
+python scripts/02_zhongddi_task/run_ablations_zhong.py --mode full
+```
+
+---
+
+## 📊 Quantitative Visualization
+Our framework provides built-in scripts to generate high-quality figures and latent space analysis reported in the paper:
+
+- **Cluster Analysis**: Run `scripts/04_evaluation_and_plots/calc_purity_nmi.py` to calculate Normalized Mutual Information (NMI) and Cluster Purity.
+- **Latent Manifolds**: Use `scripts/04_evaluation_and_plots/plot_figures.py` to generate t-SNE visualizations and task-adaptive interpretability bar charts.
+
+---
 
 ## 📝 Citation
-
-If you find our work or this code useful for your research, please consider citing our paper:
 
 ```bibtex
 @article{wang2026geminiddi,
   title={Gemini-DDI: A Dual-view Framework for Drug-Drug Interaction Prediction},
-  author={Wang, Shuoxiang and Zhou, Changjian},
+  author={Wang, Shuoxiang and Zhang, Jiaqing and Hu, Xiya and Song, Jia and Cheng, Heng-Da and Xiang, Wensheng and Zhou, Changjian},
   journal={Pattern Recognition (Under Review)},
   year={2026}
 }
 ```
 
 ## 📧 Contact
-For any questions or issues regarding the code, please open an issue in this repository or contact the corresponding author at: `zhouchangjian@neau.edu.cn`.
+For technical inquiries, please open an issue or contact the corresponding authors:  
+**Wensheng Xiang**: `xiangwensheng@neau.edu.cn`  
+**Changjian Zhou**: `zhouchangjian@neau.edu.cn`
 ```
 
 ---
