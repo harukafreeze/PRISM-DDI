@@ -11,26 +11,6 @@
 
 ---
 
-## Project Structure
-
-We maintain a strictly modularized directory structure for easy reproduction and scalability:
-
-```text
-Gemini-DDI/
-├── configs/                  # Task-specific configurations (ZhongDDI/DB65)
-├── prism/                    # Core neural operators and data loaders
-│   ├── layers.py             # Mixed-precision optimized layers
-│   └── model.py              # Dual-view residual interaction architecture
-├── scripts/
-│   ├── 01_data_preprocessing/ # Data filtering, 5x Augmentation, and Serialization
-│   ├── 02_zhongddi_task/      # Reproduction for 4-class ADME task
-│   ├── 03_drugbank65_task/    # Reproduction for 65-class fine-grained task
-│   └── 04_evaluation_and_plots/ # Plotting and quantitative clustering (NMI/Purity)
-└── data/                     # Data placeholders (Raw/Processed)
-```
-
----
-
 ## 🛠️ Installation
 
 **1. Clone the repository**
