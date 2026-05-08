@@ -8,7 +8,6 @@
 
 > **Official implementation for the paper:**  
 > **"Gemini-DDI: A Dual-view Framework for Drug-Drug Interaction Prediction"**  
-> (Currently under review at *Pattern Recognition*)
 
 ---
 
