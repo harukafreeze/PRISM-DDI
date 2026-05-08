@@ -1,5 +1,5 @@
 
-# Gemini-DDI ♊: A Dual-view Framework for Drug-Drug Interaction Prediction
+# Gemini-DDI: A Dual-view Framework for Drug-Drug Interaction Prediction
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/release/python-380/)
 [![TensorFlow 2.x](https://img.shields.io/badge/TensorFlow-2.x-orange.svg)](https://tensorflow.org)
@@ -11,7 +11,7 @@
 
 ---
 
-## 🛠️ Installation
+## Installation
 
 **1. Clone the repository**
 ```bash
@@ -81,28 +81,6 @@ python scripts/03_drugbank65_task/train_inductive_teacher.py
 # Then, run Pro-level Consistency Distillation with Radar monitoring
 python scripts/03_drugbank65_task/distill_s2_db65.py
 ```
-
----
-
-## 📊 Quantitative Visualization
-Our framework provides built-in scripts to generate high-quality figures and latent space analysis reported in the paper:
-
-- **Cluster Analysis**: Run `scripts/04_evaluation_and_plots/calc_purity_nmi.py` to calculate Normalized Mutual Information (NMI) and Cluster Purity.
-- **Latent Manifolds**: Use `scripts/04_evaluation_and_plots/plot_figures.py` to generate t-SNE visualizations and task-adaptive interpretability bar charts.
-
----
-
-## 📝 Citation
-
-```bibtex
-@article{wang2026geminiddi,
-  title={Gemini-DDI: A Dual-view Framework for Drug-Drug Interaction Prediction},
-  author={Wang, Shuoxiang and Zhang, Jiaqing and Hu, Xiya and Song, Jia and Cheng, Heng-Da and Xiang, Wensheng and Zhou, Changjian},
-  journal={Pattern Recognition (Under Review)},
-  year={2026}
-}
-```
-
 
 ---
 
